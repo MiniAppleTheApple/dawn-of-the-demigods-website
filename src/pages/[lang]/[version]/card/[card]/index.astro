@@ -1,0 +1,37 @@
+---
+import Layout from "@layouts/Layout.astro"
+import Container from "@components/container.astro"
+
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const cards = await getCollection('cards');
+  return cards.map((entry) => {
+    const [lang, version, card] = entry.slug.split("/")
+    return {
+      params: { lang, version, card }, props: { entry }
+    }
+  });
+}
+
+const { entry } = Astro.props
+const { Content } = await entry.render();
+---
+<Layout title={ entry.data.name }>
+  <Container>
+    <section class="font-sans prose-lg prose-stone">
+      <h1 class="font-sans text-6xl font-extrabold border-b-yellow-500 border-b-8 py-8 my-0">{entry.data.name}</h1>
+      <img src={entry.data.avatar.src} alt={entry.data.avatar.alt}>
+      <p>費用：{entry.data.cost.summon}/{entry.data.cost.evo}</p>
+      <p>數值：{entry.data.stats.atk}/{entry.data.stats.def}</p>
+      <h2 class="font-sans text-4xl font-extrabold border-b-yellow-500 border-b-8 py-8 my-0">元素</h2>
+      <ul>
+        {entry.data.elements.map(element => <li>{element}</li>)}
+      </ul>
+
+      <h2 class="font-sans text-4xl font-extrabold border-b-yellow-500 border-b-8 py-8 my-0">效果</h2>
+      <Content/>
+        <p>發佈日期：{ new Intl.DateTimeFormat('en-US', {dateStyle: 'full',timeStyle: 'full', timeZone: 'Brazil/East'}).format(entry.data.publishDate)}</p>
+    </section>
+  </Container>
+</Layout>

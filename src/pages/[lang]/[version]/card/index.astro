@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  function uniqBy(f, array) {
+    return [...new Map(array.map(x => [f(x), x])).values()]
+  }
+  const cards = await getCollection("cards")
+
+  return uniqBy(x => {
+    const [lang, version] = x.slug.split("/") 
+    return JSON.stringify([lang, version])
+  }, cards).
+  map(entry => {
+    const [lang, version] = entry.slug.split("/");
+    return {params: { lang, version }, props: { entry }}
+  });
+}
+---
+
+<h1>Hello</h1>
