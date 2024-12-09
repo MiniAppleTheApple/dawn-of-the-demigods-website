@@ -6,7 +6,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://astroship.web3templates.com",
+  site: "https://dawn-of-the-demigods.netlify.app/",
   integrations: [tailwind(), mdx(), sitemap(), icon()],
   redirects: {
     '/en': '/en/20241208v',
